@@ -7,8 +7,8 @@
 ![Domain](https://img.shields.io/badge/Domain-Telecom%20%2F%20ISP-blue?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Completo-brightgreen?style=for-the-badge)
 
-**10 queries analíticas de nível pleno–sênior aplicadas a um ISP fictício.**  
-Churn, inadimplência, cohort, ranking de vendedores, crescimento de MRR e mais.
+**10 queries analíticas aplicadas a um ISP fictício (FiberNet).**  
+Churn, cohort, inadimplência aging, ranking de vendedores e crescimento de MRR com Window Functions, CTEs e PostgreSQL 14+.
 
 [▶ Ver Queries](#-queries) · [📊 Ver Insights](insights/resumo_resultados.md) · [🚀 Rodar Localmente](#-como-rodar)
 
