@@ -1,0 +1,99 @@
+version: 2
+
+sources:
+  - name: fibernet
+    schema: public
+    description: "Tabelas brutas do FiberNet ISP carregadas via seed.sql"
+    tables:
+      - name: clients
+      - name: contracts
+      - name: financial_receivables
+      - name: tickets
+      - name: plans
+      - name: sellers
+      - name: sales
+
+models:
+  - name: stg_clients
+    description: "Clientes FiberNet — limpeza de status nulo"
+    columns:
+      - name: client_id
+        description: "PK do cliente"
+        tests:
+          - unique
+          - not_null
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['active', 'cancelled']
+      - name: city
+        tests:
+          - not_null
+      - name: created_at
+        tests:
+          - not_null
+
+  - name: stg_contracts
+    description: "Contratos — amount renomeado para monthly_amount"
+    columns:
+      - name: contract_id
+        description: "PK do contrato"
+        tests:
+          - unique
+          - not_null
+      - name: client_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_clients')
+              field: client_id
+      - name: monthly_amount
+        tests:
+          - not_null
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['active', 'cancelled']
+
+  - name: stg_financial_receivables
+    description: "Boletos com flags derivadas is_paid e is_overdue"
+    columns:
+      - name: receivable_id
+        description: "PK do boleto"
+        tests:
+          - unique
+          - not_null
+      - name: contract_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_contracts')
+              field: contract_id
+      - name: due_date
+        tests:
+          - not_null
+      - name: competence
+        tests:
+          - not_null
+
+  - name: stg_support_tickets
+    description: "Tickets de suporte com flag is_open e resolution_hours calculado"
+    columns:
+      - name: ticket_id
+        description: "PK do ticket"
+        tests:
+          - unique
+          - not_null
+      - name: contract_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_contracts')
+              field: contract_id
+      - name: status
+        tests:
+          - accepted_values:
+              values: ['open', 'closed']
+      - name: protocol
+        tests:
+          - not_null

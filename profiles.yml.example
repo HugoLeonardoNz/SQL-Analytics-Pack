@@ -1,0 +1,39 @@
+# profiles.yml.example
+#
+# INSTRUÇÕES:
+#   1. Copie este arquivo para ~/.dbt/profiles.yml
+#   2. Substitua <SEU_USUARIO> e <SUA_SENHA> com suas credenciais
+#   3. NUNCA commite o arquivo real — apenas este .example fica no repositório
+#
+# O arquivo profiles.yml nunca deve ser versionado. Adicione ao .gitignore:
+#   profiles.yml
+#   .dbt/
+
+fibernet:
+  target: dev
+  outputs:
+
+    # ── PostgreSQL (local) ────────────────────────────────────────────────────
+    dev:
+      type:     postgres
+      host:     localhost
+      port:     5432
+      user:     "<SEU_USUARIO>"       # ex: postgres
+      password: "<SUA_SENHA>"         # ex: postgres
+      dbname:   fibernet_analytics
+      schema:   public
+      threads:  4
+
+    # ── BigQuery (opcional) ───────────────────────────────────────────────────
+    # Para usar: dbt run --target bq
+    # Requer: pip install dbt-bigquery
+    #         gcloud auth application-default login
+    bq:
+      type:                 bigquery
+      method:               oauth                     # usa gcloud auth local
+      project:              "<SEU-PROJETO-GCP>"       # ex: meu-projeto-12345
+      dataset:              fibernet_analytics
+      location:             US
+      threads:              4
+      timeout_seconds:      300
+      priority:             interactive

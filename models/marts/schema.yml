@@ -1,0 +1,73 @@
+version: 2
+
+models:
+  - name: mrr_mensal
+    description: "MRR mensal com crescimento líquido e MRR acumulado — base para health-check financeiro"
+    columns:
+      - name: mes
+        description: "Mês no formato YYYY-MM"
+        tests:
+          - unique
+          - not_null
+      - name: mrr_novo
+        tests:
+          - not_null
+      - name: mrr_cancelado
+        tests:
+          - not_null
+      - name: crescimento_liquido
+        tests:
+          - not_null
+      - name: mrr_acumulado
+        tests:
+          - not_null
+
+  - name: clientes_em_risco
+    description: "Clientes ativos com score de risco > 0 (boletos vencidos + tickets abertos). Sem LIMIT — representa todos os contratos em situação de risco."
+    columns:
+      - name: contract_id
+        tests:
+          - unique
+          - not_null
+      - name: score_risco
+        tests:
+          - not_null
+      - name: nivel_risco
+        tests:
+          - accepted_values:
+              values: ['MÉDIO', 'ALTO', 'CRÍTICO']
+
+  - name: cohort_retencao
+    description: "Retenção de cohorts trimestrais nos marcos t+0, t+1, t+3, t+6, t+9, t+12, t+18, t+24"
+    columns:
+      - name: coorte
+        tests:
+          - not_null
+      - name: mes_n
+        tests:
+          - not_null
+      - name: retencao_pct
+        tests:
+          - not_null
+
+  - name: ranking_vendedores
+    description: "Performance de vendedores: volume, receita nova, % churn de carteira e ranking por receita"
+    columns:
+      - name: vendedor
+        tests:
+          - unique
+          - not_null
+      - name: ranking
+        tests:
+          - not_null
+
+  - name: ltv_estimado
+    description: "LTV estimado por plano usando tempo médio ativo × ticket mensal. Usa CURRENT_DATE para refletir dados reais."
+    columns:
+      - name: plano
+        tests:
+          - unique
+          - not_null
+      - name: ltv_estimado
+        tests:
+          - not_null
