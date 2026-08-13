@@ -1,11 +1,29 @@
-with cohort_base as (
+-- O tamanho da coorte sai de uma agregacao propria, e nao de
+-- count(distinct ...) over (partition by ...): PostgreSQL nao implementa
+-- DISTINCT dentro de window function ("DISTINCT is not implemented for
+-- window functions"), e era isso que derrubava o CI.
+with clientes as (
     select
         cl.client_id,
-        date_trunc('quarter', cl.created_at)              as cohort_quarter,
-        count(distinct cl.client_id) over (
-            partition by date_trunc('quarter', cl.created_at)
-        )                                                 as total_cohort
+        date_trunc('quarter', cl.created_at)              as cohort_quarter
     from {{ ref('stg_clients') }} cl
+),
+
+tamanho_coorte as (
+    select
+        cohort_quarter,
+        count(distinct client_id)                         as total_cohort
+    from clientes
+    group by cohort_quarter
+),
+
+cohort_base as (
+    select
+        c.client_id,
+        c.cohort_quarter,
+        t.total_cohort
+    from clientes c
+    join tamanho_coorte t on t.cohort_quarter = c.cohort_quarter
 ),
 
 monthly_payers as (

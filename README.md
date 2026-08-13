@@ -7,6 +7,7 @@
 ![Domain](https://img.shields.io/badge/Domain-Telecom%20%2F%20ISP-0ea5e9?style=for-the-badge)
 ![Queries](https://img.shields.io/badge/Queries-10-6366f1?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Completo-10b981?style=for-the-badge)
+![CI](https://github.com/HugoLeonardoNz/SQL-Analytics-Pack/actions/workflows/dbt_ci.yml/badge.svg)
 
 **10 queries analíticas aplicadas a um ISP fictício (FiberNet) com 300 clientes.**  
 Churn por plano, cohort de retenção, aging de inadimplência, scoring de risco e crescimento de MRR — Window Functions, CTEs e PostgreSQL 14+.
