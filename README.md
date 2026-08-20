@@ -64,6 +64,10 @@ sql-analytics-pack/
 │   ├── 08_clientes_em_risco.sql
 │   ├── 09_tempo_medio_cancelamento.sql
 │   └── 10_top_cidades_churn.sql
+├── models/                 ← os mesmos recortes como modelos dbt (staging + marts)
+├── tools/
+│   └── run_query.py        ← roda qualquer query em DuckDB, sem servidor
+├── docs/img/               ← resultados exportados pelo run_query.py
 └── analysis/
     └── findings.md         ← resultados verificados com o seed + interpretação de negócio
 ```
@@ -112,12 +116,27 @@ sql-analytics-pack/
 | Ibirité | 23 | R$ 3.127,70 | 11,0% |
 
 ### Aging de Inadimplência
+
+![Aging de inadimplência](docs/img/inadimplencia_aging.png)
+
 | Faixa | Boletos | Valor em Aberto | Recuperabilidade |
 |-------|---------|-----------------|-----------------|
 | Até 30 dias | 23 | R$ 3.027,70 | Alta |
 | 31–60 dias | 25 | R$ 3.007,50 | Média |
 | 61–90 dias | 26 | R$ 3.007,40 | Baixa |
 | **Acima de 90 dias** | **309** | **R$ 37.909,10** | Crítica |
+
+A leitura está na última linha: 80,7% do saldo em aberto já passou de 90 dias.
+Isso muda a decisão de cobrança — não é carteira para régua de lembrete, é
+carteira para negociação com desconto ou baixa contábil.
+
+### Ranking de vendedores
+
+![Ranking de vendedores](docs/img/ranking_vendedores.png)
+
+Volume e qualidade de carteira não andam juntos: a vendedora com mais vendas
+novas tem 26,5% de churn na própria carteira, contra 18,2% de quem vendeu menos.
+Comissionar só por volume premia quem traz o cliente que sai.
 
 ### Resumo Executivo
 | Métrica | Valor |
@@ -150,10 +169,25 @@ psql -U postgres -d fibernet -f data/seed.sql
 psql -U postgres -d fibernet -f queries/02_churn_por_plano.sql
 ```
 
-**Sem PostgreSQL instalado?** Use o [DB Fiddle](https://www.db-fiddle.com) (PostgreSQL 14):
-1. Cole `schema.sql` + `seed.sql` em **Schema SQL**
-2. Cole a query em **Query SQL**
-3. Clique em **Run** — sem instalar nada
+**Sem PostgreSQL instalado?** O pacote roda em memória, sem servidor:
+
+```bash
+pip install duckdb pandas matplotlib
+
+python tools/run_query.py                # lista as 10 queries
+python tools/run_query.py 05             # imprime o resultado
+python tools/run_query.py 05 --png docs/img/aging.png   # gera a imagem
+```
+
+O DuckDB lê **o mesmo** `data/schema.sql` e **o mesmo** `data/seed.sql`, e as
+queries não são reescritas — se precisassem ser, o exercício perderia a graça.
+A única adaptação está na carga: `SERIAL` vira `INTEGER` e as chamadas de
+`setval` saem, porque sem sequência não há sequência para reposicionar. As
+imagens deste README são geradas por esse script, não recortadas da tela.
+
+Alternativa sem instalar nada: [DB Fiddle](https://www.db-fiddle.com)
+(PostgreSQL 14) — cole `schema.sql` + `seed.sql` em **Schema SQL**, a query em
+**Query SQL** e clique em **Run**.
 
 ---
 

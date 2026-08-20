@@ -1,8 +1,8 @@
 # 📊 Insights — FiberNet ISP Analytics
 
 > Todos os números abaixo são obtidos executando as queries do diretório `queries/`
-> contra o seed em `datasets/seed.sql`. Reproduzível por qualquer pessoa que seguir
-> o guia de instalação do README.
+> contra o seed em `data/seed.sql`. Reproduzível sem instalar PostgreSQL:
+> `python tools/run_query.py 02` roda a query contra o mesmo seed via DuckDB.
 >
 > **Dataset de referência:** 300 clientes | 4.241 boletos | 220 tickets | Período 2022–2024
 
@@ -45,28 +45,33 @@ receita *e* reduzir churn simultaneamente.
 
 ## 03 · Cohort de Retenção Trimestral
 
+A query devolve a retenção em vários marcos (`mes_n` = 0, 1, 3, 6, 9, 12, 18, 24).
+O recorte abaixo é o marco de **12 meses** — a leitura mais comparável entre
+coortes, porque todas as de 2022 e 2023 já o completaram.
+
 ```
-coorte    total  ativos  cancelados  retencao_pct
-2022 Q1   23     14       9          60,9%
-2022 Q2   24     20       4          83,3%
-2022 Q3   24     20       4          83,3%
-2022 Q4   36     25      11          69,4%
-2023 Q1   23     19       4          82,6%
-2023 Q2   32     25       7          78,1%
-2023 Q3   33     25       8          75,8%
-2023 Q4   36     30       6          83,3%
-2024 Q1   24     19       5          79,2%
-2024 Q2   26     16      10          61,5%
-2024 Q3   19     14       5          73,7%
+coorte    total_clientes  clientes_retidos  retencao_pct
+2022 Q1   23              14                60,9%
+2022 Q2   24              17                70,8%
+2022 Q3   24              19                79,2%
+2022 Q4   36              23                63,9%
+2023 Q1   23              18                78,3%
+2023 Q2   32              23                71,9%
+2023 Q3   33              25                75,8%
+2023 Q4   36              26                72,2%
 ```
 
-**🔍 Insight:** O cohort mais antigo (2022 Q1) apresenta a pior retenção histórica (60,9%),
-o que é esperado — mais tempo = mais oportunidade de cancelar. Destaque negativo para
-**2024 Q2** (61,5%), que com apenas ~4 meses de vida já apresenta retenção próxima à do
-cohort de 2 anos. Isso pode indicar deterioração recente na qualidade do onboarding ou
-pressão competitiva crescente no período.
+**🔍 Insight:** A coorte **2022 Q1 retém 60,9% em 12 meses**, a pior da série, e a
+2022 Q4 vem logo atrás com 63,9%. As coortes de 2023 ficam todas entre 71,9% e
+78,3% — mais estáveis e, na média, 9 pontos acima das de 2022. A leitura mais
+provável é maturação de processo (onboarding, qualificação de venda) e não sorte
+de amostra, porque o padrão se repete nos quatro trimestres de 2023.
 
----
+> Cuidado de leitura: a retenção aqui **não é monotônica**. Um cliente conta como
+> retido no mês *n* se pagou um boleto com competência naquele mês; quem atrasa e
+> depois regulariza sai e volta. Por isso `mes_n = 3` pode ficar acima de
+> `mes_n = 1`. É uma medida de atividade de pagamento, não de contrato ativo — a
+> query documenta essa escolha no cabeçalho.
 
 ## 04 · Ranking de Vendedores
 
