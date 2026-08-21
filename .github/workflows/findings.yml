@@ -1,0 +1,30 @@
+name: findings
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# O dbt_ci.yml cobre o MODELO (chaves, nulos, valores aceitos). Este cobre as
+# CONCLUSOES: os numeros que o analysis/findings.md publica. Sao coisas
+# diferentes — o schema pode estar integro e o texto continuar citando um numero
+# que a query deixou de devolver.
+jobs:
+  findings:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: pip install -r requirements-dev.txt
+
+      # DuckDB le o MESMO schema.sql e o MESMO seed.sql do PostgreSQL, em
+      # memoria, e roda as queries sem reescrever nenhuma.
+      - name: Testes dos numeros publicados
+        run: pytest tests/ -v

@@ -8,6 +8,7 @@
 ![Queries](https://img.shields.io/badge/Queries-10-6366f1?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Completo-10b981?style=for-the-badge)
 ![CI](https://github.com/HugoLeonardoNz/SQL-Analytics-Pack/actions/workflows/dbt_ci.yml/badge.svg)
+![testes](https://github.com/HugoLeonardoNz/SQL-Analytics-Pack/actions/workflows/findings.yml/badge.svg)
 
 **10 queries analíticas aplicadas a um ISP fictício (FiberNet) com 300 clientes.**  
 Churn por plano, cohort de retenção, aging de inadimplência, scoring de risco e crescimento de MRR — Window Functions, CTEs e PostgreSQL 14+.
@@ -217,6 +218,34 @@ LEFT JOIN        -- score de risco composto com múltiplas fontes
 ```
 
 ---
+
+---
+
+## Os achados publicados são testados
+
+```bash
+pip install -r requirements-dev.txt
+pytest tests/ -v
+```
+
+Número em README não executa — e foi exatamente por isso que este portfólio deixou
+texto e código divergirem em silêncio mais de uma vez. Num dos repositórios, um
+comentário explicava que 87,0% era número inventado e o gráfico sessenta linhas
+abaixo plotava 87,0%. Em outro, o texto dizia "São Paulo tem a melhor taxa do país"
+enquanto o CSV ao lado registrava que era o 5º.
+
+O `dbt test` cobre o **modelo** (chaves, nulos, valores aceitos). Esta suíte cobre
+as **conclusões**: Betim com 27,4% da receita, o plano básico em 36,7% de churn com
+a escada inteira monotônica, R$ 37,9 mil vencidos há mais de 90 dias, Contagem como
+cidade de maior churn. São coisas diferentes — o schema pode estar íntegro e o texto
+continuar citando um número que a query deixou de devolver.
+
+Roda via DuckDB, sobre o mesmo `schema.sql` e o mesmo `seed.sql` do PostgreSQL, sem
+reescrever nenhuma query: reescrever verificaria outra coisa.
+
+Se o gerador, a fonte ou a limpeza mudarem, o teste falha e obriga a atualizar o
+texto. É a mesma regra que vale para dado: **ou se deriva de uma fonte só, ou se
+escreve um teste que falha quando as duas divergirem.**
 
 ## Autor
 
