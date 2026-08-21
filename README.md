@@ -24,10 +24,13 @@ Os 3 projetos desta série representam a **mesma empresa fictícia** em granular
 
 | Granularidade | Projetos | Escala | Abrangência |
 |---|---|---|---|
-| **Análise Regional** | SQL Analytics Pack · Churn Predictor | 300 contratos | Região Centro-MG: Betim, Contagem, Ribeirão das Neves, Esmeraldas, Ibirité |
-| **Visão Operacional Nacional** | Telecom KPI Dashboard | ~82.500 clientes | 5 regiões nacionais (Norte, Sul, Leste, Oeste, Centro) |
+| **Amostra Regional** | SQL Analytics Pack | 300 contratos | Centro-MG: Betim, Contagem, Ribeirão das Neves, Esmeraldas, Ibirité |
+| **Base de Modelagem** | Churn Predictor | 15.000 contratos | 5 regiões · planos até Empresarial |
+| **Visão Operacional Nacional** | Telecom KPI Dashboard | 88.501 clientes (jan/25) | 5 regiões nacionais (Norte, Sul, Leste, Oeste, Centro) |
 
-A divergência de escala é **intencional**: o SQL Pack e o Churn Predictor mergulham numa amostra regional de alta granularidade para análise SQL profunda e modelagem preditiva. O KPI Dashboard consolida a operação completa para monitoramento em tempo real — os mesmos padrões de negócio (churn por plano, inadimplência, MRR), em escala nacional.
+A divergência de escala é **intencional**: o SQL Pack mergulha numa amostra pequena, onde dá para conferir cada linha na mão. Modelo precisa de volume, então o Churn Predictor gera 15.000 contratos. O KPI Dashboard consolida a operação inteira.
+
+**O que essas bases NÃO são: a mesma tabela.** Cada projeto gera a sua, com o seu gerador. O padrão de negócio se repete — plano de menor ticket cancela mais, atraso e insatisfação antecipam a saída — mas o número exato de um não vale como conferência do outro. O `churn-predictor` chegou a fixar as taxas de churn do app nos valores que a query 02 do SQL Pack devolve, e a coincidência costurada à mão era apresentada como prova de coerência da série.
 
 ---
 
