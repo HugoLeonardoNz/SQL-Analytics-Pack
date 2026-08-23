@@ -102,10 +102,12 @@ def test_inadimplencia_concentrada_acima_de_90_dias(con):
     # "Acima de", nao apenas "90": ha duas faixas com 90 no rotulo — "61 a 90
     # dias" e "Acima de 90 dias" — e pegar a primeira selecionava a errada.
     pior = d[d["faixa"].str.contains("Acima")].iloc[0]
-    assert 46000 <= total <= 47500, f"Total em aberto: {total:.2f}"
-    assert float(pior["valor_em_aberto"]) / total > 0.75, (
-        "A concentracao acima de 90 dias caiu abaixo de 75% e o insight muda"
-    )
+    # A faixa era generosa (46 mil a 47,5 mil) para um numero que o README
+    # agora estampa na linha de total da tabela. Numero publicado exato pede
+    # asserçao exata — a faixa larga deixava o texto envelhecer dentro dela.
+    assert round(total, 2) == 46951.70, f"Total em aberto: {total:.2f}"
+    concentracao = float(pior["valor_em_aberto"]) / total * 100
+    assert round(concentracao, 1) == 80.7, f"Concentracao >90d: {concentracao:.1f}%"
     assert float(pior["media_dias_atraso"]) > 300, (
         "A media de atraso da pior faixa caiu; o texto fala em 417 dias"
     )

@@ -17,6 +17,8 @@ Churn por plano, cohort de retenção, aging de inadimplência, scoring de risco
 
 </div>
 
+> Peça do portfólio de **Hugo Leonardo**, Analista de Dados — os oito projetos, com o contexto de cada um, estão em **[hugoleonardonz.github.io/portfolio](https://hugoleonardonz.github.io/portfolio/)**.
+
 ---
 
 ## Universo FiberNet — Escala Canônica
@@ -129,8 +131,10 @@ sql-analytics-pack/
 | 31–60 dias | 25 | R$ 3.007,50 | Média |
 | 61–90 dias | 26 | R$ 3.007,40 | Baixa |
 | **Acima de 90 dias** | **309** | **R$ 37.909,10** | Crítica |
+| **Total** | **383** | **R$ 46.951,70** | — |
 
-A leitura está na última linha: 80,7% do saldo em aberto já passou de 90 dias.
+A leitura está na última linha antes do total: 80,7% do saldo em aberto já
+passou de 90 dias.
 Isso muda a decisão de cobrança — não é carteira para régua de lembrete, é
 carteira para negociação com desconto ou baixa contábil.
 
