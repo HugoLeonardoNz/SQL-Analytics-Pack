@@ -20,6 +20,10 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
+          # Este repo nao tem requirements.txt na raiz (as libs de analise
+          # vivem no -dev). Sem apontar o caminho, o setup-python aborta com
+          # "No file matched to **/requirements.txt" ANTES de instalar nada.
+          cache-dependency-path: requirements-dev.txt
 
       - name: Instalar dependencias
         run: pip install -r requirements-dev.txt
