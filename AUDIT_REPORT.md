@@ -1,7 +1,7 @@
 # Audit Report — SQL Analytics Pack
 
 **Data:** 2026-04-27  
-**Auditor:** Hugo Leonardo  
+**Auditor:** Hugo Nazário  
 **Versão:** v1.0
 
 ---
