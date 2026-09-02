@@ -70,10 +70,21 @@ sql-analytics-pack/
 │   ├── 08_clientes_em_risco.sql
 │   ├── 09_tempo_medio_cancelamento.sql
 │   └── 10_top_cidades_churn.sql
-├── models/                 ← os mesmos recortes como modelos dbt (staging + marts)
+├── models/                 ← os mesmos recortes como modelos dbt
+│   ├── staging/            ← 4 modelos stg_* + schema.yml (testes de chave e nulo)
+│   └── marts/              ← 5 modelos de consumo + schema.yml
+├── dbt_project.yml         ← o projeto dbt; roda em DuckDB local e em BigQuery
+├── profiles.yml.example    ← modelo de perfil, sem credencial
+├── Makefile                ← atalhos de seed, build e teste
+├── bigquery/               ← a mesma análise fora do DuckDB
+│   ├── load_to_bigquery.py ← sobe o seed para um dataset BigQuery
+│   ├── 08_clientes_em_risco_bq.sql  ← a query 08 no dialeto do BigQuery
+│   └── setup_bigquery.md   ← como criar o dataset e apontar o profile
 ├── tools/
 │   └── run_query.py        ← roda qualquer query em DuckDB, sem servidor
+├── tests/                  ← asserções sobre as CONCLUSÕES (o `dbt test` cobre o modelo)
 ├── docs/img/               ← resultados exportados pelo run_query.py
+├── README_dbt.md           ← o passo a passo do dbt, que não cabia aqui
 └── analysis/
     └── findings.md         ← resultados verificados com o seed + interpretação de negócio
 ```
